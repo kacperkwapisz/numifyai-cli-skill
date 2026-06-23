@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.1"
+  version: "1.2"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.2**.
+Requires Node.js 22+. Current CLI version: **0.1.3**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.2"
+    "cliVersion": "0.1.3"
   }
 }
 ```
