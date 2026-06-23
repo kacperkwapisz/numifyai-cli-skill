@@ -4,13 +4,22 @@ An AI agent skill file that teaches coding agents (Claude Code, Cursor, Windsurf
 
 ## Install
 
-### skills-cli
+### skills-cli (Claude Code only)
 
 ```bash
-npx skills-cli add kacperkwapisz/numifyai-cli-skill
+npx skills add https://github.com/kacperkwapisz/numifyai-cli-skill --global
 ```
 
-### Claude Code
+### Claude Code + Pi (recommended)
+
+```bash
+mkdir -p ~/.claude/skills/numifyai-cli ~/.agents/skills/numifyai-cli
+curl -fsSL https://numifyai.com/skills/numifyai-cli/SKILL.md \
+  -o ~/.claude/skills/numifyai-cli/SKILL.md
+cp ~/.claude/skills/numifyai-cli/SKILL.md ~/.agents/skills/numifyai-cli/SKILL.md
+```
+
+### Project-local
 
 ```bash
 mkdir -p .claude/skills/numifyai-cli
