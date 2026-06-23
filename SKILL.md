@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.4"
+  version: "1.5"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.5**.
+Requires Node.js 22+. Current CLI version: **0.1.6**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.5"
+    "cliVersion": "0.1.6"
   }
 }
 ```
@@ -226,7 +226,7 @@ Each line requires `accountId`, `accountCode`, `debitAmount`, `creditAmount`. Sh
 
 #### `vat edit` flags
 
-Optional: `--net-amount` (grosze), `--vat-amount` (grosze), `--document-number`.
+Optional: `--gtu-codes`, `--procedure-markers`, `--split-payment` (boolean), `--reverse-charge` (boolean), `--intra-eu` (boolean), `--ksef-number`, `--ksef-flag`.
 
 ### Contractors
 
@@ -324,15 +324,17 @@ Optional: `--account-number`, `--bank-name`.
 |---|---|---|
 | `--company` | ✅ | Company ID |
 | `--name` | ✅ | Asset name |
-| `--initial-value` | ✅ | Initial value in grosze |
-| `--depreciation-method` | | `linear` \| `degressive` \| `one_time` |
-| `--depreciation-rate` | | Annual depreciation rate (%) |
-| `--acquisition-date` | | Acquisition date (`YYYY-MM-DD`) |
+| `--initial-value` | ✅ | Acquisition value in grosze |
+| `--acquisition-date` | ✅ | Acquisition date (`YYYY-MM-DD`) |
+| `--useful-life-months` | ✅ | Useful life in months |
+| `--depreciation-method` | ✅ | `linear` \| `degressive` \| `one_time` |
+| `--depreciation-rate` | ✅ | Annual depreciation rate (%) |
+| `--depreciation-start-date` | | Depreciation start date (defaults to acquisition date) |
 | `--kst-code` | | KŚT classification code |
 
 #### `assets edit` flags
 
-Optional: `--name`, `--depreciation-rate`.
+Optional: `--name`, `--kst-code`, `--notes`.
 
 ### Fiscal periods
 
@@ -513,9 +515,9 @@ numify vat summary --company $COMPANY --period 2025-01 --json | jq '.data'
 
 ```bash
 numify assets create --company $COMPANY --name "MacBook Pro" \
-  --initial-value 1299900 --depreciation-method linear \
-  --depreciation-rate 30 --acquisition-date 2025-01-10 \
-  --kst-code 491 --immediate --json
+  --initial-value 1299900 --acquisition-date 2025-01-10 \
+  --useful-life-months 40 --depreciation-method linear \
+  --depreciation-rate 30 --kst-code 491 --immediate --json
 ```
 
 ### Upload a document
