@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.6"
+  version: "1.8"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.7**.
+Requires Node.js 22+. Current CLI version: **0.1.9**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.7"
+    "cliVersion": "0.1.9"
   }
 }
 ```
@@ -219,10 +219,10 @@ Each line requires `accountId`, `accountCode`, `debitAmount`, `creditAmount`. Sh
 
 | Command | Key flags | Description |
 |---|---|---|
-| `numify vat list` | `--company`, `--period` | List VAT register entries. |
+| `numify vat list` | `--company` (required), `--year` (required), `--month` (required) | List VAT register entries. |
 | `numify vat create` | `--company`, `--transaction-id` (required), `--immediate` | Create VAT entry from transaction. |
 | `numify vat edit <id>` | `--company`, `--immediate` | Edit VAT entry. |
-| `numify vat summary` | `--company`, `--period` | VAT summary for period. |
+| `numify vat summary` | `--company` (required), `--year` (required), `--month` (required) | VAT summary for period. |
 
 #### `vat edit` flags
 
@@ -389,7 +389,7 @@ Each line requires `accountId`, `accountCode`, `balance` (single number in grosz
 
 | Command | Description |
 |---|---|
-| `numify dashboard --company <id>` | Quick company dashboard overview. |
+| `numify dashboard --company <id>` | `--start-date`, `--end-date` | Quick company dashboard overview. |
 
 ### Misc
 
@@ -508,7 +508,7 @@ numify reports trial-balance --company $COMPANY --start-date 2025-01-01 --end-da
 ### VAT summary for a period
 
 ```bash
-numify vat summary --company $COMPANY --period 2025-01 --json | jq '.data'
+numify vat summary --company $COMPANY --year 2025 --month 1 --json | jq '.data'
 ```
 
 ### Register a fixed asset
