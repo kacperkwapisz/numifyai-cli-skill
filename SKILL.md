@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.2"
+  version: "1.3"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.3**.
+Requires Node.js 22+. Current CLI version: **0.1.4**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.3"
+    "cliVersion": "0.1.4"
   }
 }
 ```
@@ -201,10 +201,12 @@ Optional: `--description`, `--amount-net`, `--amount-vat`, `--amount-gross`, `--
 |---|---|---|
 | `--company` | ✅ | Company ID |
 | `--description` | ✅ | Entry description |
-| `--entries` | ✅ | JSON array: `[{"accountId": "...", "debit": 10000}, {"accountId": "...", "credit": 10000}]` |
+| `--entries` | ✅ | JSON array: `[{"accountId": "...", "accountCode": "401", "debitAmount": 10000, "creditAmount": 0}, ...]` |
 | `--date` | | Entry date (`YYYY-MM-DD`) |
 
-**Double-entry rule:** total debits must equal total credits. Amounts in grosze.
+Each line requires `accountId`, `accountCode`, `debitAmount`, `creditAmount`. Optional: `description`, `contractorId`, `isTaxDeductible`, `nkupReason`.
+
+**Double-entry rule:** total debitAmount must equal total creditAmount. Amounts in grosze.
 
 ### Chart of accounts
 
@@ -354,7 +356,10 @@ Optional: `--name`, `--depreciation-rate`.
 | Flag | Required | Description |
 |---|---|---|
 | `--company` | ✅ | Company ID |
-| `--entries` | ✅ | JSON array: `[{"accountId": "...", "debit": 10000}, {"accountId": "...", "credit": 10000}]` |
+| `--date` | ✅ | Balance date (`YYYY-MM-DD`) |
+| `--entries` | ✅ | JSON array: `[{"accountId": "...", "accountCode": "010", "balance": 50000}, ...]` |
+
+Each line requires `accountId`, `accountCode`, `balance` (single number in grosze, positive = debit, negative = credit).
 
 ### Pending actions
 
@@ -488,7 +493,7 @@ numify transactions create --company $COMPANY --type income \
 ```bash
 numify journal create --company $COMPANY \
   --description "Office rent January" \
-  --entries '[{"accountId":"ACC_ID_1","debit":500000},{"accountId":"ACC_ID_2","credit":500000}]' \
+  --entries '[{"accountId":"ACC_ID_1","accountCode":"402","debitAmount":500000,"creditAmount":0},{"accountId":"ACC_ID_2","accountCode":"201","debitAmount":0,"creditAmount":500000}]' \
   --date 2025-01-31 --immediate --json
 ```
 
@@ -530,7 +535,8 @@ numify pending cancel <action-id> --json
 
 ```bash
 numify opening-balance set --company $COMPANY \
-  --entries '[{"accountId":"ACC1","debit":1000000},{"accountId":"ACC2","credit":1000000}]' \
+  --date 2025-01-01 \
+  --entries '[{"accountId":"ACC1","accountCode":"010","balance":1000000},{"accountId":"ACC2","accountCode":"800","balance":-1000000}]' \
   --immediate --json
 ```
 
