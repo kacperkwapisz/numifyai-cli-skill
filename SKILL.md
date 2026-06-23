@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.3"
+  version: "1.4"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.4**.
+Requires Node.js 22+. Current CLI version: **0.1.5**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.4"
+    "cliVersion": "0.1.5"
   }
 }
 ```
@@ -204,7 +204,7 @@ Optional: `--description`, `--amount-net`, `--amount-vat`, `--amount-gross`, `--
 | `--entries` | ✅ | JSON array: `[{"accountId": "...", "accountCode": "401", "debitAmount": 10000, "creditAmount": 0}, ...]` |
 | `--date` | | Entry date (`YYYY-MM-DD`) |
 
-Each line requires `accountId`, `accountCode`, `debitAmount`, `creditAmount`. Optional: `description`, `contractorId`, `isTaxDeductible`, `nkupReason`.
+Each line requires `accountId`, `accountCode`, `debitAmount`, `creditAmount`. Shorthand `debit`/`credit` also accepted (auto-mapped). Optional: `description`, `contractorId`, `isTaxDeductible`, `nkupReason`.
 
 **Double-entry rule:** total debitAmount must equal total creditAmount. Amounts in grosze.
 
