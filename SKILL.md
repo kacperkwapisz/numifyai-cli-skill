@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.5"
+  version: "1.6"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.6**.
+Requires Node.js 22+. Current CLI version: **0.1.7**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.6"
+    "cliVersion": "0.1.7"
   }
 }
 ```
@@ -276,10 +276,10 @@ Optional: `--name`, `--tax-id`, `--type`, `--city`, `--street`, `--email`, `--is
 
 | Command | Key flags | Description |
 |---|---|---|
-| `numify reports trial-balance` | `--company` (required), `--year`, `--month` | Trial balance report. |
-| `numify reports balance-sheet` | `--company`, `--period` | Balance sheet (Bilans). |
-| `numify reports profit-loss` | `--company`, `--period` | Profit & Loss (RZiS). |
-| `numify reports cit` | `--company`, `--year` | CIT tax report. |
+| `numify reports trial-balance` | `--company` (required), `--start-date`, `--end-date` | Trial balance report. |
+| `numify reports balance-sheet` | `--company` (required), `--as-of-date` | Balance sheet (Bilans). |
+| `numify reports profit-loss` | `--company` (required), `--start-date`, `--end-date` | Profit & Loss (RZiS). |
+| `numify reports cit` | `--company` (required), `--fiscal-year` | CIT tax report. |
 
 ### Bank accounts
 
@@ -502,7 +502,7 @@ numify journal create --company $COMPANY \
 ### Get trial balance
 
 ```bash
-numify reports trial-balance --company $COMPANY --year 2025 --month 1 --json | jq '.data'
+numify reports trial-balance --company $COMPANY --start-date 2025-01-01 --end-date 2025-01-31 --json | jq '.data'
 ```
 
 ### VAT summary for a period
