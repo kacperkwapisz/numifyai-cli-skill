@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.8"
+  version: "1.9"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.9**.
+Requires Node.js 22+. Current CLI version: **0.1.10**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.9"
+    "cliVersion": "0.1.10"
   }
 }
 ```
@@ -192,8 +192,8 @@ Optional: `--description`, `--amount-net`, `--amount-vat`, `--amount-gross`, `--
 | `numify journal list` | `--company` | List journal entries. |
 | `numify journal get <id>` | `--company` | Show journal entry details. |
 | `numify journal create` | `--company`, `--immediate` | Create a journal entry (deferred). |
-| `numify journal post <id>` | `--company` | Post a draft entry. |
-| `numify journal storno <id>` | `--company`, `--immediate` | Storno (reverse) an entry. |
+| `numify journal post <id>` | `--company` (required) | Post a draft entry. |
+| `numify journal storno <id>` | `--company` (required), `--date`, `--reason`, `--immediate` | Storno (reverse) an entry. |
 
 #### `journal create` flags
 
@@ -313,9 +313,9 @@ Optional: `--account-number`, `--bank-name`.
 | `numify assets get <id>` | `--company` | Show asset details. |
 | `numify assets create` | `--company`, `--immediate` | Register a fixed asset (deferred). |
 | `numify assets edit <id>` | `--immediate` | Edit an asset (deferred). |
-| `numify assets dispose <id>` | `--company`, `--immediate` | Dispose/retire an asset. |
+| `numify assets dispose <id>` | `--company`, `--disposal-date`, `--disposal-value`, `--disposal-reason`, `--immediate` | Dispose/retire an asset. |
 | `numify assets depreciation <id>` | `--company` | Show depreciation schedule. |
-| `numify assets generate-depreciation` | `--company`, `--immediate` | Generate depreciation entries. |
+| `numify assets generate-depreciation` | `--company`, `--year`, `--month`, `--immediate` | Generate depreciation entries. |
 | `numify assets export` | `--company` | Export asset register. |
 
 #### `assets create` flags
