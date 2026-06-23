@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.9"
+  version: "1.10"
 ---
 
 # Numify AI CLI
@@ -21,7 +21,7 @@ Numify AI is a bookkeeping tool for Polish sp. z o.o. companies. The `numify` CL
 npm i -g numifyai
 ```
 
-Requires Node.js 22+. Current CLI version: **0.1.10**.
+Requires Node.js 22+. Current CLI version: **0.1.11**.
 
 ## Authentication
 
@@ -50,7 +50,7 @@ Pass `--json` to every command. Output is a stable versioned envelope on stdout:
     "apiUrl": "https://numify.ai",
     "authSource": "env",
     "durationMs": 142,
-    "cliVersion": "0.1.10"
+    "cliVersion": "0.1.11"
   }
 }
 ```
@@ -280,6 +280,9 @@ Optional: `--name`, `--tax-id`, `--type`, `--city`, `--street`, `--email`, `--is
 | `numify reports balance-sheet` | `--company` (required), `--as-of-date` | Balance sheet (Bilans). |
 | `numify reports profit-loss` | `--company` (required), `--start-date`, `--end-date` | Profit & Loss (RZiS). |
 | `numify reports cit` | `--company` (required), `--fiscal-year` | CIT tax report. |
+| `numify reports jpk-vat` | `--company`, `--year`, `--month`, `--purpose` (1\|2), `--email`, `--file` | Generate JPK-VAT XML. |
+| `numify reports jpk-vat-preview` | `--company`, `--year`, `--month` | Preview JPK-VAT data. |
+| `numify reports accounting-policy` | `--company`, `--file` | Export Polityka Rachunkowości. |
 
 ### Bank accounts
 
@@ -291,6 +294,9 @@ Optional: `--name`, `--tax-id`, `--type`, `--city`, `--street`, `--email`, `--is
 | `numify bank lines` | `--company`, `--account` | List bank statement lines. |
 | `numify bank import <bank-account-id> <file>` | | Import bank statement (CSV/MT940). |
 | `numify bank auto-match` | `--company` | Auto-match bank lines to transactions. |
+| `numify bank match <account-id> <line-id>` | `--transaction` (required), `--immediate` | Match bank line to transaction (deferred — creates payment JE). |
+| `numify bank unmatch <account-id> <line-id>` | | Unmatch a bank statement line. |
+| `numify bank clear-unmatched <account-id>` | `--confirm` | Delete all unmatched lines (destructive). |
 
 #### `bank create` flags
 
@@ -352,6 +358,8 @@ Optional: `--name`, `--kst-code`, `--notes`.
 |---|---|---|
 | `numify opening-balance get` | `--company` | Show opening balance. |
 | `numify opening-balance set` | `--company`, `--immediate` | Set opening balance. |
+| `numify opening-balance accounts` | `--company` | List accounts available for opening balance. |
+| `numify opening-balance status` | `--company`, `--fiscal-year` | Check opening balance status. |
 
 #### `opening-balance set` flags
 
@@ -375,21 +383,49 @@ Each line requires `accountId`, `accountCode`, `balance` (single number in grosz
 
 ### Compliance
 
-| Command | Description |
-|---|---|
-| `numify compliance` | Compliance checks and status. |
+| Command | Key flags | Description |
+|---|---|---|
+| `numify compliance jpk-kr-pd` | `--company`, `--year`, `--file` | Generate JPK-KR-PD XML. |
+| `numify compliance jpk-st-kr` | `--company`, `--year`, `--file` | Generate JPK-ST-KR XML. |
+| `numify compliance vat-ue` | `--company`, `--year`, `--month`, `--file` | Generate VAT-UE XML. |
+| `numify compliance e-sprawozdanie` | `--company`, `--year`, `--average-headcount`, `--events-after-bs-date`, `--approval-date`, `--signatory-name`, `--file` | Generate e-Sprawozdanie XML. |
+| `numify compliance informacja-dodatkowa` | `--company`, `--year`, `--average-headcount`, `--events-after-bs-date`, `--file` | Generate Informacja Dodatkowa XML. |
+| `numify compliance subsidiary-ledger` | `--company`, `--end-date` | List subsidiary ledger (Księga Pomocnicza) for contractors. |
+| `numify compliance subsidiary-ledger-detail` | `--company`, `--contractor` or `--asset`, `--start-date`, `--end-date` | Subsidiary ledger detail for a contractor or asset. |
+| `numify compliance deadlines` | | Upcoming compliance deadlines. |
+| `numify compliance white-list <nip> <bank-account>` | `--date` | Verify NIP + bank account on White List. |
+| `numify compliance vies <vat-id>` | | VIES VAT number validation. |
+
+### Lookups
+
+| Command | Key flags | Description |
+|---|---|---|
+| `numify lookup krs <krs>` | | Look up company by KRS number. |
+| `numify lookup nip <nip>` | | Look up company by NIP (GUS/CEIDG). |
+| `numify lookup white-list <nip>` | `--date` | Look up entity on MF White List by NIP. |
+
+### Exchange rates
+
+| Command | Key flags | Description |
+|---|---|---|
+| `numify exchange-rates get <currency> <date>` | `--company` | Get NBP exchange rate. |
+| `numify exchange-rates apply` | `--company`, `--transaction`, `--immediate` | Apply NBP rate to a foreign-currency transaction (deferred). |
 
 ### Export
 
-| Command | Description |
-|---|---|
-| `numify export` | Export data (CSV, JSON). |
+| Command | Key flags | Description |
+|---|---|---|
+| `numify export transactions` | `--company`, `--file` | Export transactions. |
+| `numify export vat-register` | `--company`, `--file` | Export VAT register. |
+| `numify export trial-balance` | `--company`, `--file` | Export trial balance. |
+| `numify export contractors` | `--company`, `--file` | Export contractors. |
+| `numify export general-ledger` | `--company`, `--file` | Export general ledger. |
 
 ### Dashboard
 
-| Command | Description |
-|---|---|
-| `numify dashboard --company <id>` | `--start-date`, `--end-date` | Quick company dashboard overview. |
+| Command | Key flags | Description |
+|---|---|---|
+| `numify dashboard` | `--company` (required), `--start-date`, `--end-date` | Quick company dashboard overview. |
 
 ### Misc
 
@@ -546,6 +582,62 @@ numify opening-balance set --company $COMPANY \
 
 ```bash
 numify dashboard --company $COMPANY --json | jq '.data'
+```
+
+### Generate JPK-VAT
+
+```bash
+numify reports jpk-vat --company $COMPANY --year 2025 --month 1 --file jpk-vat-2025-01.xml --json
+```
+
+### Preview JPK-VAT before generating
+
+```bash
+numify reports jpk-vat-preview --company $COMPANY --year 2025 --month 1 --json | jq '.data'
+```
+
+### Export accounting policy
+
+```bash
+numify reports accounting-policy --company $COMPANY --file polityka-rachunkowosci.json --json
+```
+
+### Generate e-Sprawozdanie
+
+```bash
+numify compliance e-sprawozdanie --company $COMPANY --year 2025 \
+  --signatory-name "Jan Kowalski" --approval-date 2026-03-31 \
+  --file e-sprawozdanie-2025.xml --json
+```
+
+### Look up a company by NIP
+
+```bash
+numify lookup nip 1234567890 --json | jq '.data'
+```
+
+### Get NBP exchange rate
+
+```bash
+numify exchange-rates get EUR 2025-01-15 --json | jq '.data'
+```
+
+### Apply exchange rate to transaction
+
+```bash
+numify exchange-rates apply --company $COMPANY --transaction $TX_ID --immediate --json
+```
+
+### Match bank line to transaction
+
+```bash
+numify bank match $BANK_ACCOUNT_ID $LINE_ID --transaction $TX_ID --immediate --json
+```
+
+### Check opening balance status
+
+```bash
+numify opening-balance status --company $COMPANY --fiscal-year 2025 --json | jq '.data'
 ```
 
 ### Create a contractor
