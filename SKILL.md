@@ -8,7 +8,7 @@ description: >
   journal entries, VAT register, trial balance, Polish accounting.
 metadata:
   author: numifyai
-  version: "1.10"
+  version: "1.11"
 ---
 
 # Numify AI CLI
@@ -356,7 +356,7 @@ Optional: `--name`, `--kst-code`, `--notes`.
 
 | Command | Key flags | Description |
 |---|---|---|
-| `numify opening-balance get` | `--company` | Show opening balance. |
+| `numify opening-balance get` | `--company`, `--fiscal-year` (required) | Show opening balance. |
 | `numify opening-balance set` | `--company`, `--immediate` | Set opening balance. |
 | `numify opening-balance accounts` | `--company` | List accounts available for opening balance. |
 | `numify opening-balance status` | `--company`, `--fiscal-year` | Check opening balance status. |
@@ -567,6 +567,12 @@ numify documents upload --company $COMPANY --file invoice.pdf --json
 ```bash
 numify pending list --json | jq '.data'
 numify pending cancel <action-id> --json
+```
+
+### Get opening balance
+
+```bash
+numify opening-balance get --company $COMPANY --fiscal-year 2025 --json | jq '.data'
 ```
 
 ### Set opening balance
